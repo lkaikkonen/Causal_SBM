@@ -1,0 +1,18 @@
+Sediment_Type,Soft,Hard Clay,Rocks,,
+Sediment_contaminants,low,medium,high,,
+Depth_extraction,1-10cm,11-30cm,>30cm,,
+Plume_release,At the seafloor,At surface,,,
+Concretion_removal,50%,75%,100%,,
+Volume_extraction,Low,Moderate,High,,
+Suspended_sediment_bottom,Low,Moderate,High,,
+Contaminant_release,Low,Significant,,,
+Sediment_deposition,<1mm,1-5mm ,5-10mm,,
+Mobile_epifauna_dir,0-10%,11-30%,31-60%,61-80%,81-100%
+Sessile_epifauna_dir,0-10%,11-30%,31-60%,61-80%,81-100%
+Infauna_dir,0-10%,11-30%,31-60%,61-80%,81-100%
+Mobile_epifauna_indir,0-10%,11-30%,31-60%,61-80%,81-100%
+Sessile_epifauna_indir,0-10%,11-30%,31-60%,61-80%,81-100%
+Infauna_indir,0-10%,11-30%,31-60%,61-80%,81-100%
+Mobile_epifauna_total,0-10%,11-30%,31-60%,61-80%,81-100%
+Sessile_epifauna_total,0-10%,11-30%,31-60%,61-80%,81-100%
+Infauna_total,0-10%,11-30%,31-60%,61-80%,81-100%
