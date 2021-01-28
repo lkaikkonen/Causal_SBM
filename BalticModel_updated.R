@@ -1,6 +1,6 @@
-### BALTIC SEA SBM BN MODEL UPDATED
+### BALTIC SEA SBM BN MODEL 
 ## Kaikkonen L. 
-# Edited on 2020-11-02
+# Edited on 2021-01
 
 # load packages
 
@@ -12,12 +12,10 @@ library(gRain)
 library(gRbase)
 library(ggplot2)
 
-# Acute impacts on Benthic fauna
-
 # Import node names and states
 
 
-nodes1<-read.table("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/Node_BalticSeaERA_benthos.csv", header=FALSE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+nodes1<-read.table(~"Node_BalticSeaERA_benthos.csv", header=FALSE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 
 nodes<-as.matrix(nodes1[,1])
 
@@ -26,7 +24,7 @@ colnames(states)<-NULL
 
 # Import network connections as matrix
 
-data<- read.table("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data//Edge_BalticSeaERA_benthos.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE) #read edges
+data<- read.table(~"Edge_BalticSeaERA_benthos.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE) #read edges
 
 arc.set =as.matrix(data)
 
@@ -65,34 +63,34 @@ In_tot<-states[18,1:5]
 
 ### PARAMETRISATION ###
 
-# Probas of independent variables
+# CPTs of independent variables
 
-CRp<-array(c(0.45,0.5, 0.05), dim=c(3), dimnames=list(Concretion_removal = CR))
-DEp<- array(c(0.10,0.45, 0.45), dim = 3,dimnames=list(Depth_extraction = DE)) # depth of extraction
+CRp<-array(c(0.45,0.5, 0.05), dim=c(3), dimnames=list(Concretion_removal = CR)) #Mining intensity /Concretion removal
+DEp<- array(c(0.10,0.45, 0.45), dim = 3,dimnames=list(Depth_extraction = DE)) # Depth of extraction
 SCp <- array(c(0.6, 0.3,0.1), dim = 3,dimnames=list(Sediment_contaminants = SC))  #Sediment contaminants
 STp <- array(c(0.6, 0.3,0.1), dim = 3,dimnames=list(Sediment_Type = ST))  #Sediment type
 PRp <- array(c(0.5,0.5), dim = 2,dimnames=list(Plume_release = PR)) # Plume release
 
 #Dependent nodes
 
-#tip: argument dim corresponds to the max extent of each of the variables
+#NB: argument dim corresponds to the max extent of each of the variables
 # Volume of extracted sediment
-VolExt<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/BalticSeaERA_benthos_Volume-of-extraction_Concretion-removal.Depth-of-extraction_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+VolExt<-read.csv("CPTs/BalticSeaERA_benthos_Volume-of-extraction_Concretion-removal.Depth-of-extraction_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 
 VolExt<-as.matrix(VolExt[,4:6])
 colnames(VolExt) <- NULL
 VolExt.pr<-array(t(VolExt),dim=c(3,3,3),dimnames = list(Volume_extraction = VE, Depth_extraction = DE, Concretion_removal=CR)) # read in transposed matrix
-VolExt.pr<-VolExt.pr/100
+VolExt.pr<-VolExt.pr/100 # transform to frequency
 
 # Suspended sediment 
-SSed<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/BalticSeaERA_benthos_Suspended-sediment-bottom_Sediment-Type.Plume-release.Volume-of-extraction_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SSed<-read.csv("CPTs/BalticSeaERA_benthos_Suspended-sediment-bottom_Sediment-Type.Plume-release.Volume-of-extraction_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 SSed<-as.matrix(SSed[,5:7])
 colnames(SSed) <- NULL
 SS.pr<-array(t(SSed),dim=c(3,3,2,3),dimnames = list(Suspended_sediment_bottom = SS, Volume_extraction = VE, Plume_release=PR, Sediment_Type=ST)) 
 SS.pr<-SS.pr/100
 
 # Contaminant release
-CoRel<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/BalticSeaERA_benthos_Contaminant-release_Sediment-Type.Volume-of-extraction.Sediment-contaminants_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+CoRel<-read.csv("CPTs/BalticSeaERA_benthos_Contaminant-release_Sediment-Type.Volume-of-extraction.Sediment-contaminants_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 CoRel<-as.matrix(CoRel[,5:6])
 colnames(CoRel) <- NULL
 CRel.pr<-array(t(CoRel),dim=c(2,3,3,3),dimnames = list(Contaminant_release = CRel,Sediment_contaminants=SC, Volume_extraction = VE,  Sediment_Type=ST)) 
@@ -100,14 +98,14 @@ CRel.pr<-CRel.pr/100
 
 #Sediment deposition
 
-SeDep<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/BalticSeaERA_benthos_Sediment-deposition_Suspended-sediment-bottom_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SeDep<-read.csv("CPTs/BalticSeaERA_benthos_Sediment-deposition_Suspended-sediment-bottom_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 SeDep<-as.matrix(SeDep[,3:5])
 colnames(SeDep) <- NULL
 SeDeppr<-array(t(SeDep),dim=c(3,3),dimnames = list(Sediment_deposition=SDep,Suspended_sediment_bottom=SS)) 
 SeDeppr<-SeDeppr/100
 
 # Sessile epifauna indirect
-SesEpi_indir<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/Sessile-epifauna_indirect2.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SesEpi_indir<-read.csv("CPTs/Sessile-epifauna_indirect2.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 
 SesEpi_id<-as.matrix(SesEpi_indir[,4:8])
 colnames(SesEpi_id) <- NULL
@@ -117,7 +115,7 @@ SesEpi_idpr<-SesEpi_idpr/100
 
 # Mobile epifauna indirect
 
-MoEpi_indir<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/Mobile_epifauna_indirect.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+MoEpi_indir<-read.csv("CPTs/Mobile_epifauna_indirect.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 
 MoEpi_indir<-as.matrix(MoEpi_indir[,4:8])
 colnames(MoEpi_indir) <- NULL
@@ -125,7 +123,7 @@ MoEpi_idpr<-array(t(MoEpi_indir),dim=c(5,2,3,3),dimnames = list(Mobile_epifauna_
 MoEpi_idpr<-MoEpi_idpr/100
 
 # Infauna indirect
-Infa_indir<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/Infauna_indirect.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+Infa_indir<-read.csv("CPTs/Infauna_indirect.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 Infa_indir<-as.matrix(Infa_indir[,4:8])
 colnames(Infa_indir) <- NULL
 #In_idpr<-array(t(Infa_indir),dim=c(5,2,3,3),dimnames = list(Infauna=In,Contaminant_release = CRel,Sediment_deposition=SDep,Suspended_sediment_bottom=SS)) 
@@ -135,7 +133,7 @@ In_idpr<-Inpr/100
 
 # Sessile epifauna direct
 
-SesEpi_dir<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/Sessile_epifauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SesEpi_dir<-read.csv("CPTs/Sessile_epifauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 SesEpi_dir<-as.matrix(SesEpi_dir[,2:6])
 colnames(SesEpi_dir) <- NULL
 SesEpi_dpr<-matrix(t(SesEpi_dir),ncol=3,dimnames = list(Sessile_epifauna_dir=SEpi_dir, Concretion_removal=CR))
@@ -143,14 +141,14 @@ SesEpi_dpr<-SesEpi_dpr/100
 
 # Mobile epifauna direct
 
-MoEpi_dir<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/Mobile_epifauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+MoEpi_dir<-read.csv("CPTs/Mobile_epifauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 MoEpi_dir<-as.matrix(MoEpi_dir[,2:6])
 colnames(MoEpi_dir) <- NULL
 MoEpi_dpr<-matrix(t(MoEpi_dir),ncol=3,dimnames = list(Mobile_epifauna_dir=MEpi_dir, Concretion_removal=CR))
 MoEpi_dpr<-MoEpi_dpr/100
 
 # Infauna direct
-Infa_dir<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/Infauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+Infa_dir<-read.csv("CPTs/Infauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 Infa_dir<-as.matrix(Infa_dir[,2:6])
 colnames(Infa_dir) <- NULL
 In_dpr<-matrix(t(Infa_dir),ncol=3,dimnames = list(Infauna_dir=In_dir, Concretion_removal=CR))
@@ -158,21 +156,21 @@ In_dpr<-as.matrix(In_dpr/100)
 
 # Sessile epifauna total
 
-SesEpi_tot<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/TotalMortality.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SesEpi_tot<-read.csv("CPTs/TotalMortality.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 SesEpi_tot<-as.matrix(SesEpi_tot[,3:7])
 colnames(SesEpi_tot) <- NULL
 SesEpi_tpr<-array(t(SesEpi_tot),dim=c(5,5,5),dimnames = list(Sessile_epifauna_total=SEpi_tot,Sessile_epifauna_indir=SEpi_indir, Sessile_epifauna_dir=SEpi_dir))
 
 # Mobile epifauna total
 
-MoEpi_tot<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/TotalMortality.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+MoEpi_tot<-read.csv("CPTs/TotalMortality.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 MoEpi_tot<-as.matrix(MoEpi_tot[,3:7])
 colnames(MoEpi_tot) <- NULL
 MoEpi_tpr<-array(t(MoEpi_tot),dim=c(5,5,5),dimnames = list(Mobile_epifauna_total=MEpi_tot,Mobile_epifauna_indir=MEpi_indir, Mobile_epifauna_dir=MEpi_dir))
 
 # Infauna total
 
-In_total<-read.csv("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/CPTs/TotalMortality.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+In_total<-read.csv("CPTs/TotalMortality.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 In_total<-as.matrix(In_total[,3:7])
 colnames(In_total) <- NULL
 In_tpr<-array(t(In_total),dim=c(5,5,5),dimnames = list(Infauna_total=MEpi_tot, Infauna_indir=In_indir,Infauna_dir=In_dir))
@@ -202,25 +200,7 @@ cpt <- list(Sediment_Type = STp,
             Infauna_total=In_tpr)
             
             
-BSbn <- custom.fit(dagBS, cpt) # combine BN structure and joint cpt
-
-
-
-# tests to debug
-
-net = model2network("[Infauna_indir][Infauna_dir][Infauna_total|Infauna_dir:Infauna_indir]")
-dfit = custom.fit(net, dist = list(Infauna_indir = In_idpr, Infauna_dir = In_dpr, Infauna_total = In_tpr))
-
-net = model2network("[Concretion_removal][Depth_extraction][Volume_extraction|Concretion_removal:Depth_extraction]")
-dfit = custom.fit(net, dist = list(Depth_extraction=DEp, Volume_extraction = VolExt.pr,  Concretion_removal=CRp))
-
-net = model2network("[Concretion_removal][Infauna_dir|Concretion_removal]")
-dfit = custom.fit(net, dist = list(Infauna_dir = In_dpr, Concretion_removal=CRp))
-
-net = model2network("[Suspended_sediment_bottom][Contaminant_release][Sediment_deposition][Sessile_epifauna_indir|Suspended_sediment_bottom:Contaminant_release:Sediment_deposition]")
-
-dfit = custom.fit(net, dist = list(Sessile_epifauna_indir = SesEpi_idpr, Sediment_deposition=SeDeppr,  Contaminant_release = CRel.pr,Suspended_sediment_bottom = SS.pr))
-
+BSbn <- custom.fit(dagBS, cpt) # combine BN structure and joint CPT
 
 
 ### USING THE BN ###
@@ -238,7 +218,7 @@ BiocManager::install("RBGL")
 
 junction <- compile(as.grain(BSbn))
 
-# Marginal probability for a given node
+# Marginal probability for a given node, examples
 barplot(querygrain(junction, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1))
 barplot(querygrain(junction, nodes = "Sessile_epifauna_total")$Sessile_epifauna_total, ylim=c(0,1))
 barplot(querygrain(junction, nodes = "Infauna_total")$Infauna_total, ylim=c(0,1))
@@ -249,11 +229,9 @@ jsed <- setEvidence(junction, nodes = c("Concretion_removal","Depth_extraction")
 barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
 barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
 
-barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
-
 ### QUERY RESULTS ####
 
-# SCENARIO 1
+# SCENARIO A
 Sce1 <- setEvidence(junction, nodes = c("Concretion_removal","Plume_release", "Depth_extraction"), states =c("75%", "At surface","11-30cm" ))
 
 #Total mortality
@@ -266,9 +244,8 @@ Sce1 <- setEvidence(junction, nodes = c("Concretion_removal","Plume_release", "D
   r15<-as.data.frame.table(querygrain(Sce1, nodes = "Sessile_epifauna_indir")$Sessile_epifauna_indir)
   r16<-as.data.frame.table(querygrain(Sce1, nodes = "Infauna_indir")$Infauna_indir)
   
-  
 
-# SCENARIO 2
+# SCENARIO B
 # harmful substance release
 Sce2 <- setEvidence(junction, nodes = c("Concretion_removal","Plume_release", "Depth_extraction", "Contaminant_release"), states =c("50%", "At surface", "11-30cm", "Significant"))
 ### CHECK IF var states OK!!!
@@ -284,10 +261,10 @@ r25<-as.data.frame.table(querygrain(Sce2, nodes = "Sessile_epifauna_indir")$Sess
 r26<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_indir")$Infauna_indir)
 
 
-### GRAPHICS ####
+### GRAPHICS for paper ####
 
 
-#Scenario 1
+#Scenario A
   p1<-ggplot(data=r11, aes(x=Mobile_epifauna_total, y=Freq))+ geom_bar(stat="identity",fill="#FF630C")+theme_bw()+scale_y_continuous(name="Probability", limits=c(0, 1))+xlab("")
                                                                                                                                                                            
     #+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(), panel.background = element_blank())                                                                                                                                                                          
@@ -299,7 +276,7 @@ r26<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_indir")$Infauna_indir
   p5<-ggplot(data=r15, aes(x=Sessile_epifauna_indir, y=Freq))+ geom_bar(stat="identity",fill="#355F76")+theme_bw()+ylim(0,1)+xlab("Indirect mortality")
   p6<-ggplot(data=r16, aes(x=Infauna_indir, y=Freq))+ geom_bar(stat="identity",fill="#355F76")+theme_bw()+ylim(0,1)+xlab("")
   
-  #Scenario 2
+  #Scenario B
   
   p21<-ggplot(data=r21, aes(x=Mobile_epifauna_total, y=Freq))+ geom_bar(stat="identity",fill="#FF630C")+theme_bw()+scale_y_continuous(name="Probability", limits=c(0, 1))+xlab("")
   p22<-ggplot(data=r22, aes(x=Sessile_epifauna_total, y=Freq))+ geom_bar(stat="identity",fill="#FF630C")+theme_bw()+ylim(0,1)+xlab("Total mortality")
@@ -313,55 +290,7 @@ r26<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_indir")$Infauna_indir
 ## save gridplot
   install.packages("egg")
   library(egg)
-  install.packages("cowplot")
-  library(cowplot)
 
-  ## huome!! increase font size for publication
-  
-  all<- ggarrange(p1+theme(text=element_text(size=24)), 
-                  p2 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24) ), 
-                  p3 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24) ),
-                  p4+theme(text=element_text(size=24)), 
-                  p5 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24) ), 
-                  p6 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24)),
-                  nrow = 2)
-
-  
-  
-  
-  all2<- ggarrange(p21+theme(text=element_text(size=24)), 
-                  p22 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24) ), 
-                  p23 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24) ),
-                  p24+theme(text=element_text(size=24)), 
-                  p25 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24) ), 
-                  p26 + 
-                    theme(axis.text.y = element_blank(),
-                          axis.ticks.y = element_blank(),
-                          axis.title.y = element_blank(),text=element_text(size=24)),
-                  nrow = 2)
-  
-  
   all_comb<-ggarrange(p1+theme(text=element_text(size=26)), 
                     p2 + 
                       theme(axis.text.y = element_blank(),
@@ -400,31 +329,19 @@ r26<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_indir")$Infauna_indir
                             axis.title.y = element_blank(),text=element_text(size=28)),
                     nrow = 4, widths = c(1, 1, 1))
   
-  save_plot("Fig56_2.tiff", all_comb, ncol = 3, nrow = 4,base_width=7,base_height=7)
-  
-  save_plot("Fig5.nocontaminants.tiff", all, ncol = 3, nrow = 2,base_width=6,base_height=5)
-  save_plot("Fig6.contaminants.tiff", all2, ncol = 3, nrow = 2,base_width=6,base_height=5)
 
-  
-  # Approximate inference: generating evidence with Monte Carlo simulations
-  
-  # Probability that X happens given Y and Z
-  
-  cpquery(bn, event = (B == "0-20") & (F == "20-40"), evidence = (H == "medium"), n = 10^6)
-
-
-### FULL CONCEPTUAL MODEL
+### FULL CONCEPTUAL MODEL (for visualization only)
   
   # Import node names and states
   
-  nodes2<-read.table("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/Node_BalticSeaERA_all.csv", header=F,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+  nodes2<-read.table("Node_BalticSeaERA_all.csv", header=F,fill=TRUE, sep=',', stringsAsFactors = FALSE)
   
   nodes22<-as.matrix(nodes2)
   
   
   # Import network as matrix
   
-  edge<- read.table("\\\\ad.helsinki.fi/home/l/lmkaikko/Documents/PhD tutkimus/Paper III - Seabed mining risk model/Data/Edge_BalticSeaERA_all.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE) #read edges
+  edge<- read.table(Edge_BalticSeaERA_all.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE) #read edges
   
   #data<- read.table("clipboard", header=TRUE,fill=TRUE, sep='\t', stringsAsFactors = FALSE) #read edges
   
