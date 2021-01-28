@@ -14,11 +14,8 @@ library(ggplot2)
 
 # Import node names and states
 
-
 nodes1<-read.table(~"Node_BalticSeaERA_benthos.csv", header=FALSE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
-
 nodes<-as.matrix(nodes1[,1])
-
 states<-nodes1[,2:6]
 colnames(states)<-NULL
 
@@ -130,7 +127,6 @@ colnames(Infa_indir) <- NULL
 Inpr<-array(t(Infa_indir),dim=c(5,3,2,3),dimnames = list(Infauna_indir=In_indir, Sediment_deposition=SDep, Contaminant_release = CRel,  Suspended_sediment_bottom=SS))
 In_idpr<-Inpr/100
 
-
 # Sessile epifauna direct
 
 SesEpi_dir<-read.csv("CPTs/Sessile_epifauna_direct.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
@@ -175,7 +171,6 @@ In_total<-as.matrix(In_total[,3:7])
 colnames(In_total) <- NULL
 In_tpr<-array(t(In_total),dim=c(5,5,5),dimnames = list(Infauna_total=MEpi_tot, Infauna_indir=In_indir,Infauna_dir=In_dir))
 
-
 # Combining CPTs
 
 # Combine dag and the local distributions into a CPT
@@ -198,10 +193,8 @@ cpt <- list(Sediment_Type = STp,
             Mobile_epifauna_total=MoEpi_tpr,
             Sessile_epifauna_total=SesEpi_tpr,
             Infauna_total=In_tpr)
-            
-            
+   
 BSbn <- custom.fit(dagBS, cpt) # combine BN structure and joint CPT
-
 
 ### USING THE BN ###
 # The network can be queried to give marginal probabilities
@@ -219,15 +212,15 @@ BiocManager::install("RBGL")
 junction <- compile(as.grain(BSbn))
 
 # Marginal probability for a given node, examples
-barplot(querygrain(junction, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1))
-barplot(querygrain(junction, nodes = "Sessile_epifauna_total")$Sessile_epifauna_total, ylim=c(0,1))
-barplot(querygrain(junction, nodes = "Infauna_total")$Infauna_total, ylim=c(0,1))
+ barplot(querygrain(junction, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1))
+ barplot(querygrain(junction, nodes = "Sessile_epifauna_total")$Sessile_epifauna_total, ylim=c(0,1))
+ barplot(querygrain(junction, nodes = "Infauna_total")$Infauna_total, ylim=c(0,1))
 
 # Probability of a node given evidence
 # Mining efficiency
 jsed <- setEvidence(junction, nodes = c("Concretion_removal","Depth_extraction"), states =c("50%", "1-10cm"))
-barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
-barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
+ barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
+ barplot(querygrain(jsed, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total, ylim=c(0,1), main="Mobile epifauna at 50% concretion removal")
 
 ### QUERY RESULTS ####
 
@@ -251,14 +244,14 @@ Sce2 <- setEvidence(junction, nodes = c("Concretion_removal","Plume_release", "D
 ### CHECK IF var states OK!!!
 
 #Total mortality
-r21<-as.data.frame.table(querygrain(Sce2, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total)
-r22<-as.data.frame.table(querygrain(Sce2, nodes = "Sessile_epifauna_total")$Sessile_epifauna_total)
-r23<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_total")$Infauna_total)
+ r21<-as.data.frame.table(querygrain(Sce2, nodes = "Mobile_epifauna_total")$Mobile_epifauna_total)
+ r22<-as.data.frame.table(querygrain(Sce2, nodes = "Sessile_epifauna_total")$Sessile_epifauna_total)
+ r23<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_total")$Infauna_total)
 
 #Indirect mortality
-r24<-as.data.frame.table(querygrain(Sce2, nodes = "Mobile_epifauna_indir")$Mobile_epifauna_indir)
-r25<-as.data.frame.table(querygrain(Sce2, nodes = "Sessile_epifauna_indir")$Sessile_epifauna_indir)
-r26<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_indir")$Infauna_indir)
+ r24<-as.data.frame.table(querygrain(Sce2, nodes = "Mobile_epifauna_indir")$Mobile_epifauna_indir)
+ r25<-as.data.frame.table(querygrain(Sce2, nodes = "Sessile_epifauna_indir")$Sessile_epifauna_indir)
+ r26<-as.data.frame.table(querygrain(Sce2, nodes = "Infauna_indir")$Infauna_indir)
 
 
 ### GRAPHICS for paper ####
