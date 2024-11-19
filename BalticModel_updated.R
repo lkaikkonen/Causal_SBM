@@ -1,6 +1,6 @@
 ### BALTIC SEA SBM BN MODEL 
 ## Kaikkonen L. 
-# Edited on 2021-01
+# Edited on 2024-11-19
 
 # load packages
 
@@ -72,7 +72,7 @@ PRp <- array(c(0.5,0.5), dim = 2,dimnames=list(Plume_release = PR)) # Plume rele
 
 #NB: argument dim corresponds to the max extent of each of the variables
 # Volume of extracted sediment
-VolExt<-read.csv("CPTs/BalticSeaERA_benthos_Volume-of-extraction_Concretion-removal.Depth-of-extraction_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+VolExt<-read.csv("CPTs/BalticSeaERA_benthos_Volume-of-extraction.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 
 VolExt<-as.matrix(VolExt[,4:6])
 colnames(VolExt) <- NULL
@@ -80,14 +80,14 @@ VolExt.pr<-array(t(VolExt),dim=c(3,3,3),dimnames = list(Volume_extraction = VE, 
 VolExt.pr<-VolExt.pr/100 # transform to frequency
 
 # Suspended sediment 
-SSed<-read.csv("CPTs/BalticSeaERA_benthos_Suspended-sediment-bottom_Sediment-Type.Plume-release.Volume-of-extraction_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SSed<-read.csv("CPTs/BalticSeaERA_benthos_Suspended-sediment-bottom.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 SSed<-as.matrix(SSed[,5:7])
 colnames(SSed) <- NULL
 SS.pr<-array(t(SSed),dim=c(3,3,2,3),dimnames = list(Suspended_sediment_bottom = SS, Volume_extraction = VE, Plume_release=PR, Sediment_Type=ST)) 
 SS.pr<-SS.pr/100
 
 # Contaminant release
-CoRel<-read.csv("CPTs/BalticSeaERA_benthos_Contaminant-release_Sediment-Type.Volume-of-extraction.Sediment-contaminants_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+CoRel<-read.csv("CPTs/BalticSeaERA_benthos_Contaminant-release.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 CoRel<-as.matrix(CoRel[,5:6])
 colnames(CoRel) <- NULL
 CRel.pr<-array(t(CoRel),dim=c(2,3,3,3),dimnames = list(Contaminant_release = CRel,Sediment_contaminants=SC, Volume_extraction = VE,  Sediment_Type=ST)) 
@@ -95,7 +95,7 @@ CRel.pr<-CRel.pr/100
 
 #Sediment deposition
 
-SeDep<-read.csv("CPTs/BalticSeaERA_benthos_Sediment-deposition_Suspended-sediment-bottom_Laura.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
+SeDep<-read.csv("CPTs/BalticSeaERA_benthos_Sediment-deposition.csv", header=TRUE,fill=TRUE, sep=',', stringsAsFactors = FALSE)
 SeDep<-as.matrix(SeDep[,3:5])
 colnames(SeDep) <- NULL
 SeDeppr<-array(t(SeDep),dim=c(3,3),dimnames = list(Sediment_deposition=SDep,Suspended_sediment_bottom=SS)) 
